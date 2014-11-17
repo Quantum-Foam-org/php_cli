@@ -1,8 +1,7 @@
 <?php
 
-namespace \cli;
+namespace cli\classes;
 
-use \common;
 
 /**
  * Readline interface
@@ -12,7 +11,7 @@ class ReadLine {
 	protected $defaultBackgroundColor = 0;
 	protected $terminationString = 'q';
 	protected $prompt = null;
-	protected $completion = FALSE;
+	protected $completion = TRUE;
 	
 	/**
 	 * Enables completion if the completion variable is set to TRUE
@@ -52,14 +51,19 @@ class ReadLine {
 	 * If the object supports hashistory than the input string will be added to the readline_add_history
 	 */
 	public function readline() {
-		$string = readline(($this->prompt !== null ? $this->prompt : '#'));
 		
-		while ($string !== $this->terminationString) {
-			$this->handleInput($string);
+		do {
+			$this->menu();
+			$string = readline(($this->prompt !== null ? $this->prompt : '# '));
+			$this->handleInput(trim($string));
 			if ($this->hasHistory) {
 				readline_add_history($string);
 			}
-		}
+		} while ($string !== $this->terminationString);
+	}
+	
+	public function redraw() {
+		readline_redisplay();
 	}
 	
 	/**
@@ -71,7 +75,7 @@ class ReadLine {
 	 * @return string
 	 */
 	public function text($text, $fmt = 0, $textColor = 0, $backgroundColor = 0) {
-		if (!in_array($fmt, array(1,2,4,5,7,8)) {
+		if (!in_array($fmt, array(1,2,4,5,7,8))) {
 			logger::obj()->write('Output format may not be supported', 1);
 		}
 		if (!is_int($textColor) || $textColor < 0 || $textColor > 256) {

@@ -2,6 +2,7 @@
 
 namespace cli\classes;
 
+use common\logger;
 
 /**
  * Readline interface
@@ -12,6 +13,7 @@ class ReadLine {
 	protected $terminationString = 'q';
 	protected $prompt = null;
 	protected $completion = TRUE;
+	protected $hasHistory = TRUE;
 	
 	/**
 	 * Enables completion if the completion variable is set to TRUE
@@ -42,7 +44,7 @@ class ReadLine {
 	/**
 	 * Override this method to do something with the user data.
 	 */
-	public function handleInput() {
+	public function handleInput($text) {
 		echo $string."\n";
 	}
 	
@@ -72,19 +74,34 @@ class ReadLine {
 	 * 		1-bold, 2-dim, 4-underline, 5-blink, 7-inverted, 8-hidden
 	 * @param number $textColor color of the text
 	 * @param number $backgroundColor color of the background
+	 *  Color	Foreground	Background
+	 * 	black	30			40
+	 *	red		31			41
+	 *	green	32			42
+	 *	yellow	33			43
+	 *	blue	34			44
+	 *	magenta	35			45
+	 *	cyan	36			46
+	 *	white	37			47
 	 * @return string
 	 */
 	public function text($text, $fmt = 0, $textColor = 0, $backgroundColor = 0) {
 		if (!in_array($fmt, array(1,2,4,5,7,8))) {
-			logger::obj()->write('Output format may not be supported', 1);
+			\common\logging\Logger::obj()->write('Output format may not be supported', 1);
 		}
-		if (!is_int($textColor) || $textColor < 0 || $textColor > 256) {
-			logger::obj()->write('Invalid color, '.$textColor.', should be between 0 and 256');
+		if (!is_int($textColor) || !in_array($textColor, range(30, 37))) {
+			\common\logging\Logger::obj()->write('Invalid color, '.$textColor.', should be between 0 and 256');
+			$textColor = '';
+		} else {
+			$textColor = ';'.$textColor;
 		}
-		if (!is_int($backgroundColor) || $backgroundColor < 0 || $backgroundColor > 256) {
-			logger::obj()->write('Invalid color, '.$backgroundColor.', should be between 0 and 256');
+		if (!is_int($backgroundColor) || !in_array($backgroundColor, range(40, 47))) {
+			\common\logging\Logger::obj()->write('Invalid color, '.$backgroundColor.', should be between 0 and 256');
+			$backgroundColor = '';
+		} else {
+			$backgroundColor = ';'.$backgroundColor;
 		}
 		
-		return "\e[{$fmt};{$textColor};{$backgroundColor}m{$text}\e[2{$fmt};\e0m";
+		return chr(27).'['.$fmt.$textColor.$backgroundColor.'m'.$text.chr(27).'[0m';
 	}
 }

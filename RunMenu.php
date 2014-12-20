@@ -1,12 +1,15 @@
 <?php
-
+#!/usr/local/bin/php
 
 use cli\classes as cli;
 
 require_once('../php_common/object/Config.php');
+require_once('../php_common/Config.php');
+require_once('../php_common/logging/Logger.php');
 require_once('./classes/Flag.php');
 require_once('./classes/Readline.php');
 
+\common\Config::init(parse_ini_file('config/config.ini', TRUE));
 
 
 class RunMenu extends cli\Readline {
@@ -27,14 +30,19 @@ class RunMenu extends cli\Readline {
 	}
 	
 	public function menu() {
-		echo "1.) Press 1 to return directory contents\n";
-		echo "2.) Press r to redraw the display\n";
-		echo "3.) Press q to quit\n";
+		$output = array(
+				1 => array('Press', '`d`', "to return directory contents"),
+				2 => array('Press', '`r`', "to redraw the display"),
+				3 => array('Press', '`q`', "to quit")
+		);
+		foreach ($output as $i => $t) {
+			echo $this->text($i.'.) ', 1).$this->text($t[0].' ', 1).$this->text($t[1].' ', 0, 31, 0).$this->text($t[2])."\n";
+		}
 	}
 	
 	public function handleInput($text) {
 		switch ($text) {
-			case '1':
+			case 'd':
 				echo "\n\n-----------------------------------------\n\n";
 				echo "\t\n".implode("\t\n", glob($this->dir))."\n";
 				echo "\n\n-----------------------------------------\n\n";

@@ -1,5 +1,6 @@
-<?php
 #!/usr/local/bin/php
+
+<?php
 
 use cli\classes as cli;
 

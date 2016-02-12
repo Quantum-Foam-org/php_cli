@@ -4,17 +4,19 @@
 
 use cli\classes as cli;
 
-require_once('../php_common/object/Config.php');
-require_once('../php_common/Config.php');
-require_once('../php_common/logging/Logger.php');
-require_once('./classes/Flag.php');
-require_once('./classes/Readline.php');
+$common_php_dir = '../php_common';
+$common_autoload_file = $common_php_dir.'/autoload.php';
+require($common_autoload_file);
 
-\common\Config::init(parse_ini_file('config/config.ini', TRUE));
+$cli_php_dir = '.';
+$cli_autoload_file = $cli_php_dir.'/autoload.php';
+require($cli_autoload_file);
+
+\common\Config::obj(__DIR__ . '/config/config.ini');
 
 
 class RunMenu extends cli\Readline {
-	private $dir = '.*';
+	private $dir = __DIR__;
 	
 	public function __construct($argv, $argc) {
 		
@@ -45,7 +47,7 @@ class RunMenu extends cli\Readline {
 		switch ($text) {
 			case 'd':
 				echo "\n\n-----------------------------------------\n\n";
-				echo "\t\n".implode("\t\n", glob($this->dir))."\n";
+				echo "\t\n".implode("\t\n", scandir($this->dir))."\n";
 				echo "\n\n-----------------------------------------\n\n";
 				break;
 			case 'r':

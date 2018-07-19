@@ -19,6 +19,8 @@ class Flag extends \common\obj\Config {
 	}
 	
 	public function exchangeArray($arguments) {
+	    $oldArray = $this->getArrayCopy();
+	    
 		if (!is_array($arguments)) {
 			$arguments = array($arguments);
 		}
@@ -26,10 +28,12 @@ class Flag extends \common\obj\Config {
 			$tmp = (strpos($value, '=') === FALSE ? array($value, 1) : explode('=', $value, 2));
 			try {
 				$this->offsetSet($tmp[0], $tmp[1]);
-			} catch (\OutOfBoundsException $oe) {
+			} catch (\OutOfBoundsException | \UnexpectedValueException | \RuntimeException $oe) {
 				\common\logging\Error::handle($oe);
 			}
 		}
 		unset($tmp, $value);
+		
+		return $oldArray;
 	}
 }

@@ -29,7 +29,7 @@ class ReadLine {
 	/**
 	 * Override this method to create the menu
 	 */
-	public function menu() {
+	public function menu() : void {
 		echo "1.) Test Item 1\n";
 		echo "2.) Test Item 3\n";
 	}
@@ -37,14 +37,14 @@ class ReadLine {
 	/**
 	 * Override this method to support tab completion.
 	 */
-	public function completion() {
+	public function completion() : void {
 		
 	}
 	
 	/**
 	 * Override this method to do something with the user data.
 	 */
-	public function handleInput($text) {
+	protected function handleInput(string $text) : void{
 		echo $string."\n";
 	}
 	
@@ -52,19 +52,19 @@ class ReadLine {
 	 * Will read a line from the user with readline.  handleInput is then called with the user input string.
 	 * If the object supports hashistory than the input string will be added to the readline_add_history
 	 */
-	public function readline() {
+	public function readline() : void {
 		
 		do {
 			$this->menu();
 			$string = readline(($this->prompt !== null ? $this->prompt : '# '));
-			$this->handleInput(trim($string));
+			$this->handleInput(filter_var($string, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH)));
 			if ($this->hasHistory) {
 				readline_add_history($string);
 			}
 		} while ($string !== $this->terminationString);
 	}
 	
-	public function redraw() {
+	public function redraw() : void {
 		readline_redisplay();
 	}
 	
@@ -85,7 +85,7 @@ class ReadLine {
 	 *	white	37			47
 	 * @return string
 	 */
-	public function text($text, $fmt = 0, $textColor = 0, $backgroundColor = 0) {
+	public function text(string $text, int $fmt = 0, int $textColor = 0, int $backgroundColor = 0) : string {
 		if (!in_array($fmt, array(1,2,4,5,7,8))) {
 			\common\logging\Logger::obj()->write('Output format may not be supported', 1);
 		}

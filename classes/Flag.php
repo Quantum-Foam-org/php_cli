@@ -30,6 +30,7 @@ class Flag extends \common\obj\Config {
 				$this->offsetSet($tmp[0], $tmp[1]);
 			} catch (\OutOfBoundsException | \UnexpectedValueException | \RuntimeException $oe) {
 				\common\logging\Error::handle($oe);
+				throw $oe;
 			}
 		}
 		unset($tmp, $value);

@@ -12,7 +12,7 @@ class ReadLine {
 	protected $defaultBackgroundColor = 0;
 	protected $terminationString = 'q';
 	protected $prompt = null;
-	protected $completion = TRUE;
+	protected $completion = FALSE;
 	protected $hasHistory = TRUE;
 	
 	/**

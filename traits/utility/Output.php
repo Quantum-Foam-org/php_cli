@@ -7,6 +7,17 @@ trait Output
     {
         $result = $this->header($header);
         foreach ($var as $key => $data) {
+            if (is_object($data)) {
+                $a = new \ArrayObject();
+                try {
+                    $a->exchangeArray($data);
+                    $data = $a->getArrayCopy();
+                } catch(\InvalidArgumentException $e) {
+                    \common\logging\Logger::obj()->writeException($e);
+                    $data = (string)$data;
+                    \common\logging\Logger::obj()->write("Data cast to string");
+                }
+            }
             if (is_array($data)) {
                 $result .= $key . "\n";
                 $result .= "\t". str_replace("\n", "\n\t", $this->printArray($data));

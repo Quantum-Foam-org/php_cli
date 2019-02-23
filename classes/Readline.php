@@ -85,17 +85,17 @@ class ReadLine {
 	 *	white	37			47
 	 * @return string
 	 */
-	public function text(string $text, int $fmt = 0, int $textColor = 0, int $backgroundColor = 0) : string {
-		if (!in_array($fmt, array(1,2,4,5,7,8))) {
+	public function text(string $text, int $fmt = 0, int $textColor = 37, int $backgroundColor = 40) : string {
+		if (!in_array($fmt, array(0,1,2,4,5,7,8))) {
 			\common\logging\Logger::obj()->write('Output format may not be supported', 1);
 		}
-		if (!is_int($textColor) || !in_array($textColor, range(30, 37))) {
+		if (!in_array($textColor, range(30, 37))) {
 			\common\logging\Logger::obj()->write('Invalid color, '.$textColor.', should be between 0 and 256');
 			$textColor = '';
 		} else {
 			$textColor = ';'.$textColor;
 		}
-		if (!is_int($backgroundColor) || !in_array($backgroundColor, range(40, 47))) {
+		if (!in_array($backgroundColor, range(40, 47))) {
 			\common\logging\Logger::obj()->write('Invalid color, '.$backgroundColor.', should be between 0 and 256');
 			$backgroundColor = '';
 		} else {

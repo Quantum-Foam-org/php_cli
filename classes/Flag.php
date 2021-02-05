@@ -29,8 +29,12 @@ class Flag extends \common\obj\Config {
 			try {
 				$this->offsetSet($tmp[0], $tmp[1]);
 			} catch (\OutOfBoundsException | \UnexpectedValueException | \RuntimeException $oe) {
-				\common\logging\Error::handle($oe);
-				throw $oe;
+                            \common\logging\Logger::obj()->write(
+                                    "Parameter must be set using = '--{option}={value}", 
+                                    1, 
+                                    true);
+                            
+                            exit(\common\logging\Logger::obj()->writeException($oe, -1, true));
 			}
 		}
 		unset($tmp, $value);

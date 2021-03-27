@@ -2,7 +2,7 @@
 
 namespace cli\classes;
 
-use common\logger;
+use common\logger\Logger;
 
 /**
  * Readline interface
@@ -87,16 +87,16 @@ class ReadLine {
 	 */
 	public function text(string $text, int $fmt = 0, int $textColor = 37, int $backgroundColor = 40) : string {
 		if (!in_array($fmt, array(0,1,2,4,5,7,8))) {
-			\common\logging\Logger::obj()->write('Output format may not be supported', 1);
+			Logger::obj()->write('Output format may not be supported', 1);
 		}
 		if (!in_array($textColor, range(30, 37))) {
-			\common\logging\Logger::obj()->write('Invalid color, '.$textColor.', should be between 0 and 256');
+			Logger::obj()->write('Invalid color, '.$textColor.', should be between 0 and 256');
 			$textColor = '';
 		} else {
 			$textColor = ';'.$textColor;
 		}
 		if (!in_array($backgroundColor, range(40, 47))) {
-			\common\logging\Logger::obj()->write('Invalid color, '.$backgroundColor.', should be between 0 and 256');
+			Logger::obj()->write('Invalid color, '.$backgroundColor.', should be between 0 and 256');
 			$backgroundColor = '';
 		} else {
 			$backgroundColor = ';'.$backgroundColor;

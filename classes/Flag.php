@@ -3,13 +3,13 @@
 namespace cli\classes;
 
 use common\obj;
-use common\logging;
+use common\logging\Logger;
 
 
 /**
  * Should be extended when a cli command needs to support flags.
  */
-class Flag extends \common\obj\Config {
+class Flag extends obj\Config {
 	protected $prefix = '--';
 	
 	public function __construct() {
@@ -29,12 +29,12 @@ class Flag extends \common\obj\Config {
 			try {
 				$this->offsetSet($tmp[0], $tmp[1]);
 			} catch (\OutOfBoundsException | \UnexpectedValueException | \RuntimeException $oe) {
-                            \common\logging\Logger::obj()->write(
+                            Logger::obj()->write(
                                     "Parameter must be set using = '--{option}={value}", 
                                     1, 
                                     true);
                             
-                            exit(\common\logging\Logger::obj()->writeException($oe, -1, true));
+                            exit(Logger::obj()->writeException($oe, -1, true));
 			}
 		}
 		unset($tmp, $value);
